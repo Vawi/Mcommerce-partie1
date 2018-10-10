@@ -16,7 +16,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Api( description="API pour es opérations CRUD sur les produits.")
@@ -31,7 +33,6 @@ public class ProductController {
     //Récupérer la liste des produits
 
     @RequestMapping(value = "/Produits", method = RequestMethod.GET)
-
     public MappingJacksonValue listeProduits() {
 
         Iterable<Product> produits = productDao.findAll();
@@ -51,7 +52,6 @@ public class ProductController {
     //Récupérer un produit par son Id
     @ApiOperation(value = "Récupère un produit grâce à son ID à condition que celui-ci soit en stock!")
     @GetMapping(value = "/Produits/{id}")
-
     public Product afficherUnProduit(@PathVariable int id) {
 
         Product produit = productDao.findById(id);
@@ -66,7 +66,6 @@ public class ProductController {
 
     //ajouter un produit
     @PostMapping(value = "/Produits")
-
     public ResponseEntity<Void> ajouterProduit(@Valid @RequestBody Product product) {
 
         Product productAdded =  productDao.save(product);
@@ -103,6 +102,16 @@ public class ProductController {
         return productDao.chercherUnProduitCher(400);
     }
 
-
-
+    // Calculer la marge d'un produit
+    @GetMapping(value = "/AdminProduits")
+    public Map<Product, Integer> calculerMargeProduit(){
+        List<Product> produits = productDao.findAll();
+        Map<Product, Integer> margeProduits = new HashMap<>();
+        int marge = 0;
+        for (Product p : produits){
+            margeProduits.put(p, p.getPrix() - p.getPrixAchat());
+        }
+        return margeProduits;
+    }
+    
 }

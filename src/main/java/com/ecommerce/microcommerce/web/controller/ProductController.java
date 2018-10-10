@@ -98,7 +98,6 @@ public class ProductController {
     //Pour les tests
     @GetMapping(value = "test/produits/{prix}")
     public List<Product>  testeDeRequetes(@PathVariable int prix) {
-
         return productDao.chercherUnProduitCher(400);
     }
 
@@ -113,5 +112,11 @@ public class ProductController {
         }
         return margeProduits;
     }
-    
+
+    @GetMapping(value = "/ProduitsTries" )
+    public List<Product> trierProduitsParOrdreAlphabetique() {
+        List<Product> listProduits = productDao.findAllByOrderByNom();
+        return listProduits;
+    }
+
 }
